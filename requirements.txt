@@ -1,0 +1,6 @@
+mxnet
+mxnet-cu100
+gluonnlp
+d2lzh
+tqdm
+pandas
