@@ -62,7 +62,26 @@ def download_imdb(data_dir='../data'):
     # sha1 = '01ada507287d82875905620988597833ad4e0903'
     # fname = gutils.download(url, data_dir, sha1_hash=sha1)
     with tarfile.open("../data/aclImdb_v1.tar.gz", 'r') as f:
-        f.extractall(data_dir)
+        def is_within_directory(directory, target):
+            
+            abs_directory = os.path.abspath(directory)
+            abs_target = os.path.abspath(target)
+        
+            prefix = os.path.commonprefix([abs_directory, abs_target])
+            
+            return prefix == abs_directory
+        
+        def safe_extract(tar, path=".", members=None, *, numeric_owner=False):
+        
+            for member in tar.getmembers():
+                member_path = os.path.join(path, member.name)
+                if not is_within_directory(path, member_path):
+                    raise Exception("Attempted Path Traversal in Tar File")
+        
+            tar.extractall(path, members, numeric_owner) 
+            
+        
+        safe_extract(f, data_dir)
 
 
 # 读取训练数据集
